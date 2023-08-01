@@ -1,0 +1,236 @@
+
+<html>
+<head>
+  <title>紙肖像</title>
+  <script src="three.js"></script>
+
+  <style media="screen" type="text/css">
+
+  body {
+  font: 14px/20px 'Helvetica Neue Light', HelveticaNeue-Light, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  xxxmax-width: 820px;
+  margin: 0 auto;
+  padding: 10px;
+  color: #6e6;
+}
+
+pre, code, textarea {
+  font: 12px/20px Monaco, monospace;
+  border: 1px solid #CCC;
+  border-radius: 3px;
+  background: #F9F9F9;
+  padding: 0 3px;
+  color: #555;
+}
+pre, textarea {
+  padding: 10px;
+  width: 100%;
+}
+textarea {
+  height: 200px;
+}
+textarea:focus {
+  outline: none;
+}
+
+</style>
+</head>
+
+<body bgcolor="#334" onload="onload()">
+  <h1>紙肖像</h1>
+  <div id="vertexShader">
+  </div>
+</body>
+
+<script>
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera( 75, 1.0, 0.1, 1000 );
+
+  var renderer = new THREE.WebGLRenderer();
+  renderer.setSize( 500, 500 );
+  document.body.appendChild( renderer.domElement );
+var light = new THREE.PointLight( 0xffffff, 1, 500 );
+light.position.set( 50, 50, 50 );
+scene.add( light );
+var geometry = new THREE.BoxGeometry(1,1,1);
+var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+material = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: 0x00ff00, specular: 0x009900, shininess: 30 } );
+
+
+
+gradientVertexShader = [
+    "varying vec2 vUv;",
+
+    "void main() {",
+      "vUv = uv;",
+      "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+    "}"
+  ].join("\n");
+gradientFragmentShader =  [
+    "uniform vec3 uColorZero;",
+    "uniform vec3 uColorOne;",
+    "uniform vec3 vColorZero;",
+    "uniform vec3 vColorOne;",
+
+    "varying vec2 vUv;",
+
+    "void main() {",
+
+      "gl_FragColor.rgb = mix(uColorZero, uColorOne, vUv.x) + mix(vColorZero, vColorOne, vUv.y);",
+      "gl_FragColor.a = 0.5;",
+    "}"
+
+  ].join("\n");
+
+  materialA = new THREE.ShaderMaterial(  {
+    uniforms: {
+      "uColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "uColorOne"  : { type: "c", value: new THREE.Color( 0xff0000 ) },
+      "vColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "vColorOne"  : { type: "c", value: new THREE.Color( 0x00ff00 ) }
+    },
+    vertexShader: gradientVertexShader,
+    fragmentShader: gradientFragmentShader,
+    transparent: true
+  });
+    material1 = new THREE.ShaderMaterial(  {
+    uniforms: {
+      "uColorZero" : { type: "c", value: new THREE.Color( 0xff0000 ) },
+      "uColorOne"  : { type: "c", value: new THREE.Color( 0xff00ff ) },
+      "vColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "vColorOne"  : { type: "c", value: new THREE.Color( 0x00ff00 ) }
+    },
+    vertexShader: gradientVertexShader,
+    fragmentShader: gradientFragmentShader,
+    transparent: true
+  });
+    material2 = new THREE.ShaderMaterial(  {
+    uniforms: {
+      "uColorZero" : { type: "c", value: new THREE.Color( 0x0000ff ) },
+      "uColorOne"  : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "vColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "vColorOne"  : { type: "c", value: new THREE.Color( 0x00ff00 ) }
+    },
+    vertexShader: gradientVertexShader,
+    fragmentShader: gradientFragmentShader,
+    transparent: true
+  });
+    material3 = new THREE.ShaderMaterial(  {
+    uniforms: {
+      "uColorZero" : { type: "c", value: new THREE.Color( 0x00ff00 ) },
+      "uColorOne"  : { type: "c", value: new THREE.Color( 0xffff00 ) },
+      "vColorZero" : { type: "c", value: new THREE.Color( 0x00ff00 ) },
+      "vColorOne"  : { type: "c", value: new THREE.Color( 0x00ffff ) }
+    },
+    vertexShader: gradientVertexShader,
+    fragmentShader: gradientFragmentShader,
+    transparent: true
+  });
+
+  material4 = new THREE.ShaderMaterial(  {
+    uniforms: {
+      "uColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "uColorOne"  : { type: "c", value: new THREE.Color( 0xff0000 ) },
+      "vColorZero" : { type: "c", value: new THREE.Color( 0x0000ff ) },
+      "vColorOne"  : { type: "c", value: new THREE.Color( 0x000000 ) }
+    },
+    vertexShader: gradientVertexShader,
+    fragmentShader: gradientFragmentShader,
+    transparent: true
+  });
+  material5 = new THREE.ShaderMaterial(  {
+    uniforms: {
+      "uColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "uColorOne"  : { type: "c", value: new THREE.Color( 0xff0000 ) },
+      "vColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "vColorOne"  : { type: "c", value: new THREE.Color( 0x00ff00 ) }
+    },
+    vertexShader: gradientVertexShader,
+    fragmentShader: gradientFragmentShader,
+    transparent: true
+  });
+  material6 = new THREE.ShaderMaterial(  {
+    uniforms: {
+      "uColorZero" : { type: "c", value: new THREE.Color( 0xff00ff ) },
+      "uColorOne"  : { type: "c", value: new THREE.Color( 0x0000ff ) },
+      "vColorZero" : { type: "c", value: new THREE.Color( 0x000000 ) },
+      "vColorOne"  : { type: "c", value: new THREE.Color( 0x00ff00 ) }
+    },
+    vertexShader: gradientVertexShader,
+    fragmentShader: gradientFragmentShader,
+    transparent: true
+  });
+  materialZ = new THREE.MeshBasicMaterial(  {
+    color: 0xffffff, wireframe: true, wireframeLinewidth: 30.0
+  });
+     
+  var materialUV = new THREE.MeshBasicMaterial({
+                map: THREE.ImageUtils.loadTexture( "uv-texture.jpg" ),
+                side: THREE.DoubleSide,
+                wireframe: false
+        });
+var faceMaterials = [material1, material2, material3, material4, material5, material6];
+//faceMaterials[1] = materialUV;
+material = new THREE.MeshFaceMaterial(faceMaterials);
+material.opacity = 0.4;
+var cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+sg = new THREE.SphereGeometry( 0.45, 32, 32 );
+sm = new THREE.MeshPhongMaterial({ emissive: 0x220033, color: 0x66a00ff, specular: 0x99aaff, shininess: 10 });
+var sphere = new THREE.Mesh( sg, sm );
+scene.add( sphere );
+camera.position.z = 1.8;
+function render() {
+  requestAnimationFrame(render);
+//  cube.rotation.y = 0.6;
+  //cube.rotation.x = 10;
+ // cube.rotation.x += 0.01;
+//cube.rotation.y += 0.01;
+cube.rotation.x = 0.7;
+cube.rotation.y += 0.02
+  renderer.render(scene, camera);
+}
+render();
+
+    function onload()
+    {}
+
+    document.onkeydown = function checkKey(e) {
+
+    e = e || window.event;
+
+    if (e.keyCode == '45') {
+        cube.rotation.x = 0;
+        cube.rotation.y = 0;
+        cube.rotation.z = 0;
+    }
+    else if (e.keyCode == '35') {
+      cube.rotation.x -= 0.2
+        // down arrow
+    }
+    else if (e.keyCode == '34') {
+      cube.rotation.x += 0.2
+        // down arrow
+    }
+    else if (e.keyCode == '37') {
+      cube.rotation.y -= 0.2
+        // down arrow
+    }
+    else if (e.keyCode == '39') {
+      cube.rotation.y += 0.2
+        // down arrow
+    }
+    else if (e.keyCode == '36') {
+      cube.rotation.z -= 0.2
+        // down arrow
+    }
+    else if (e.keyCode == '33') {
+      cube.rotation.z += 0.2
+        // down arrow
+    }
+
+}
+</script>
+</html>
